@@ -5,10 +5,6 @@
 # is restricted to this project.
 use Mix.Config
 
-# General application configuration
-config :potion,
-  ecto_repos: [Potion.Repo]
-
 # Configures the endpoint
 config :potion, Potion.Endpoint,
   url: [host: "localhost"],

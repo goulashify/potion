@@ -8,12 +8,3 @@ config :potion, Potion.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
-
-# Configure your database
-config :potion, Potion.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  username: "postgres",
-  password: "postgres",
-  database: "potion_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
