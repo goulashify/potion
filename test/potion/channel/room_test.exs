@@ -1,15 +1,17 @@
 defmodule Potion.Channel.RoomTest do
-  use ExUnit.Case
-  use Phoenix.ChannelTest
+  use Potion.ChannelCase
   alias Potion.Channel.Room
-  @endpoint Potion.Endpoint
 
   setup do
     {:ok, _, socket} =
-      socket("user_id", %{some: :assign})
-      |> subscribe_and_join(RoomChannel, "room:lobby")
+      socket("user_id", %{})
+      |> subscribe_and_join(Room, "room:lobby", %{"nick" => "daniel"})
 
     {:ok, socket: socket}
+  end
+
+  test "socket is not able to join with " do
+
   end
 
 #  test "ping replies with status ok", %{socket: socket} do
