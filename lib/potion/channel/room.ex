@@ -3,7 +3,8 @@ defmodule Potion.Channel.Room do
 
   require Logger
 
-  def join("room:" <> roomName, %{"nick" => nickName}, socket) do
+  # "" <> nickName needed to don't match nil
+  def join("room:" <> roomName, %{"nick" => "" <> nickName}, socket) do
     Logger.debug("User joining room #{roomName} with nick: #{nickName}")
     {:ok, assign(socket, :nick, nickName)}
   end
@@ -13,15 +14,15 @@ defmodule Potion.Channel.Room do
     {:error, %{reason: "Room doesn't exist or message is invalid.'"}}
   end
 
-  def handle_in("message", %{"content" => content}, socket) do
+  def handle_in("message", %{"content" => "" <> content}, socket) do
     messageObj = %{"content" => content, "sender" => socket.assigns.nick}
     broadcast!(socket, "message", messageObj)
     {:noreply, socket}
   end
 
-  def handle_in(messageName, messageBody, _socket) do
+  def handle_in(messageName, messageBody, socket) do
     Logger.error("Unmatched message with name \"#{messageName}\" with body #{messageBody}.")
-    {:error, %{reason: "Unmatched call."}}
+    {:stop, %{reason: "Unmatched call."}, socket}
   end
 
 end
