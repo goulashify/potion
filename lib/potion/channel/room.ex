@@ -1,12 +1,16 @@
 defmodule Potion.Channel.Room do
   use Phoenix.Channel
+  # TODO: Figure out how to get push() from Potion.Web without creating one just for this
+
+  alias Potion.Channel.Presence
 
   require Logger
 
-  # "" <> nickName needed to don't match nil
-  def join("room:" <> roomName, %{"nick" => "" <> nickName}, socket) do
-    Logger.debug("User joining room #{roomName} with nick: #{nickName}")
-    {:ok, assign(socket, :nick, nickName)}
+  def join("room:" <> room_name, %{"nick" => nick_name}, socket) when is_binary(nick_name) do
+    Logger.debug("User joining room #{room_name} with nick: #{nick_name}")
+
+#    send(self, :after_join)
+    {:ok, assign(socket, :nick, nick_name)}
   end
 
   def join(_room, message, _socket) do
@@ -14,16 +18,23 @@ defmodule Potion.Channel.Room do
     {:error, %{reason: "Room doesn't exist or message is invalid.'"}}
   end
 
-  def handle_in("message", %{"content" => "" <> content}, socket) do
-    messageObj = %{"content" => content, "sender" => socket.assigns.nick}
-    broadcast!(socket, "message", messageObj)
+#  def handle_info(:after_join, socket) do
+#      push(socket, Presence.list(socket))
+#
+#      {:ok, _} = Presence.track(socket, socket.assigns.nickName, %{
+#          online_at: inspect(System.system_time(:seconds))
+#      })
+#
+#      {:noreply, socket}
+#  end
 
+  def handle_in("message", %{"content" => content}, socket) when is_binary(content) do
+    broadcast! socket, "message", %{"content" => content, "sender" => socket.assigns.nick}
     {:noreply, socket}
   end
 
   def handle_in(messageName, messageBody, socket) do
     Logger.warn("Unmatched message with name \"#{messageName}\" with body #{messageBody}.")
-
     {:reply, {:error, %{reason: "Unmatched call."}}, socket}
   end
 

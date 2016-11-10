@@ -10,6 +10,7 @@ defmodule Potion do
     children = [
       # Start the endpoint when the application starts
       supervisor(Potion.Endpoint, []),
+      supervisor(Potion.Channel.Presence, []),
       # Start your own worker by calling: Potion.Worker.start_link(arg1, arg2, arg3)
       # worker(Potion.Worker, [arg1, arg2, arg3]),
     ]
