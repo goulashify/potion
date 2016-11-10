@@ -14,6 +14,13 @@ Ready to run in production? Please [check our deployment guides](http://www.phoe
   * For tests: `mix test`
   * For TDD: `mix test.watch`
 
+## Containers
+
+To run in a container do:
+  * Build it: `docker build . -t potion`
+  * Then run it: `docker run -p 4000:4000 potion`
+  * You can connect to the sockat at `localhost:4000` with the client library shipped with Phoenix.
+
 ## Learn more
 
   * Official website: http://www.phoenixframework.org/
