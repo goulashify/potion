@@ -18,27 +18,18 @@ defmodule Potion.Channel.RoomTest do
     assert {:error, _} = subscribe_and_join(sock, Room, "room:lobby", %{"nick" => nil})
   end
 
-  test "should be able to join with proper nick definition" do
+  test "should be able to join with valid request" do
     assert {:ok, _, _} = socket(0, %{}) |> subscribe_and_join(Room, "room:lobby", %{"nick" => "daniel"})
   end
 
-   #test for reply and error
-#  test "shouldnt be able to send without the key content", %{socket: socket, nick: nick} do
-#    push(socket, "message", nil) |> assert_reply({:stop, _})
-#  end
+  test "should receive an error when pushing invalid messages", %{socket: socket} do
+    push(socket, "message", nil) |> assert_reply(:error)
+  end
 
-#  test "ping replies with status ok", %{socket: socket} do
-#    ref = push socket, "ping", %{"hello" => "there"}
-#    assert_reply ref, :ok, %{"hello" => "there"}
-#  end
-#
-#  test "shout broadcasts to room:lobby", %{socket: socket} do
-#    push socket, "shout", %{"hello" => "all"}
-#    assert_broadcast "shout", %{"hello" => "all"}
-#  end
-#
-#  test "broadcasts are pushed to the client", %{socket: socket} do
-#    broadcast_from! socket, "broadcast", %{"some" => "data"}
-#    assert_push "broadcast", %{"some" => "data"}
-#  end
+  test "the sent message should be broadcasted with the sender's nick and the message", %{socket: socket, nick: nick} do
+    message = "hi"
+    push(socket, "message", %{"content" => message})
+
+    assert_broadcast "message", %{"content" => message, "sender" => nick}
+  end
 end

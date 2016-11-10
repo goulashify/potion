@@ -10,19 +10,21 @@ defmodule Potion.Channel.Room do
   end
 
   def join(_room, message, _socket) do
-    Logger.error("User failed to join room, #{inspect(message)}")
+    Logger.warn("User failed to join room, #{inspect(message)}")
     {:error, %{reason: "Room doesn't exist or message is invalid.'"}}
   end
 
   def handle_in("message", %{"content" => "" <> content}, socket) do
     messageObj = %{"content" => content, "sender" => socket.assigns.nick}
     broadcast!(socket, "message", messageObj)
+
     {:noreply, socket}
   end
 
   def handle_in(messageName, messageBody, socket) do
-    Logger.error("Unmatched message with name \"#{messageName}\" with body #{messageBody}.")
-    {:stop, %{reason: "Unmatched call."}, socket}
+    Logger.warn("Unmatched message with name \"#{messageName}\" with body #{messageBody}.")
+
+    {:reply, {:error, %{reason: "Unmatched call."}}, socket}
   end
 
 end
