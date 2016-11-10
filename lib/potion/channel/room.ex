@@ -18,10 +18,10 @@ defmodule Potion.Channel.Room do
   end
 
   def handle_info(:after_join, socket) do
-      push socket, "presence_state", Presence.list(socket)
+    push socket, "presence_state", Presence.list(socket)
 
-      {:ok, _} = Presence.track socket, socket.assigns.nick, %{online_at: inspect(System.system_time(:seconds))}
-      {:noreply, socket}
+    {:ok, _} = Presence.track socket, socket.assigns.nick, %{online_at: inspect(System.system_time(:seconds))}
+    {:noreply, socket}
   end
 
   def handle_in("message", %{"content" => content}, socket) when is_binary(content) do
@@ -33,5 +33,4 @@ defmodule Potion.Channel.Room do
     Logger.warn("Unmatched request with name \"#{name}\" with body #{inspect(body)}.")
     {:reply, {:error, %{reason: "Unmatched call."}}, socket}
   end
-
 end
