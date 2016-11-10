@@ -1,22 +1,18 @@
 defmodule Potion do
-  use Application
+  @moduledoc "Potion is a simple chat server kata."
 
-  # See http://elixir-lang.org/docs/stable/elixir/Application.html
-  # for more information on OTP Applications
+  use Application
+  alias Potion.Endpoint
+
   def start(_type, _args) do
     import Supervisor.Spec
 
-    # Define workers and child supervisors to be supervised
     children = [
       # Start the endpoint when the application starts
       supervisor(Potion.Endpoint, []),
       supervisor(Potion.Channel.Presence, []),
-      # Start your own worker by calling: Potion.Worker.start_link(arg1, arg2, arg3)
-      # worker(Potion.Worker, [arg1, arg2, arg3]),
     ]
 
-    # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Potion.Supervisor]
     Supervisor.start_link(children, opts)
   end
@@ -24,7 +20,7 @@ defmodule Potion do
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    Potion.Endpoint.config_change(changed, removed)
+    Endpoint.config_change(changed, removed)
     :ok
   end
 end

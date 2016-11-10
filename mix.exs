@@ -29,10 +29,13 @@ defmodule Potion.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.2.1"},
-     {:phoenix_pubsub, "~> 1.0"},
-     {:cowboy, "~> 1.0"},
-     {:mix_test_watch, "~> 0.2", only: :dev}]
+    [
+      {:phoenix, "~> 1.2.1"},
+      {:phoenix_pubsub, "~> 1.0"},
+      {:cowboy, "~> 1.0"},
+      {:mix_test_watch, "~> 0.2", only: :dev},
+      {:credo, "~> 0.3", only: [:dev, :test]}
+    ]
   end
 
   # Aliases are shortcuts or tasks specific to the current project.
@@ -42,6 +45,6 @@ defmodule Potion.Mixfile do
   #
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
-    []
+    [lint: "credo --strict"]
   end
 end
